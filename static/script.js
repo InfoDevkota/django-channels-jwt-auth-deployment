@@ -11,6 +11,9 @@ const readLocalStore = () =>{
         token = localStorage.getItem("token");
         user = JSON.parse(localStorage.getItem("user"));
         console.log(isLogin, token, user);
+
+
+        connectChatSocket();
     } else {
         isLogin = false;
         token = null;
@@ -23,16 +26,14 @@ const readLocalStore = () =>{
     
         document.getElementById("myUserName").innerText = user.user_name;
         document.getElementById("myName").innerText = user.name;
+
+        document.getElementById("chatBox").style.display = 'block';
     } else {
         document.getElementById("myInfo").style.display = 'none';
+        document.getElementById("chatBox").style.display = 'none';
         document.getElementById("loginRegister").style.display = 'block';
-
     }
 }
-
-readLocalStore();
-
-
 
 let authSocket;
 
@@ -148,3 +149,114 @@ const logout = () => {
 
     readLocalStore();
 }
+
+
+
+// now chat
+
+let chatSocket;
+
+const connectChatSocket = () =>{
+    let ws_scheme = window.location.protocol == "https:" ? "wss://" : "ws://";
+    console.log(ws_scheme);
+
+    chatSocket = new WebSocket(
+        ws_scheme
+        + window.location.host
+        + '/ws/chat/?token='+token
+    );
+
+    chatSocket.onopen = event =>{
+        console.log("chat Socket connected..")
+    }
+
+    chatSocket.onmessage = (e) =>{
+        let response = JSON.parse(e.data);
+
+        // console.log(response);
+
+        let type = response.type;
+
+        if(type == 'message') {
+            showMessage(response.data.message);
+        }
+
+        if(type == 'noAuth') {
+            //lets clear 
+            logout();
+        }
+
+        if(type == 'newMessage') {
+            console.log(response.data);
+
+            let messageDiv = getAMessageHTML(
+                response.data.sender.name,
+                response.data.sender.userName,
+                response.data.message,
+                response.data.date
+            );
+
+            document.getElementById("messageHolder").appendChild(messageDiv);
+        }
+    }
+}
+
+const sendMessage = () =>{
+    let message = document.getElementById("messageText").value;
+    // console.log(message, message.length);
+    if(message.length>0) {
+        chatSocket.send(JSON.stringify({
+            type: 'message',
+            data: {
+                message: message
+            }
+        }));
+        document.getElementById("messageText").value = "";
+    }
+}
+
+
+const getAMessageHTML = (name, userName, message, date) => {
+    // <div class="a-message">
+    //     <div class="a-message-name">
+    //        <span>▣</span>
+    //        <span> Name</span>
+    //     </div>
+    //     <div class="a-message-message">
+    //         Message Message Message Message Message Message Message Message Message Message Message
+    //         Message Message Message Message Message Message Message Message Message Message Message
+    //         Message Message Message Message
+    //     </div>
+    //     <div class="a-message-date">
+    //         Date
+    //     </div>
+    // </div>
+
+    let outerDiv = document.createElement('div');
+    outerDiv.classList.add('a-message');
+
+    let nameDiv = document.createElement('div');
+    nameDiv.classList.add('a-message-name');
+
+    let nameSpan = document.createElement('span');
+    nameSpan.innerText = ` ${name} (${userName})` ;
+    nameDiv.appendChild(nameSpan);
+
+    outerDiv.appendChild(nameDiv);
+
+    let messageDiv = document.createElement('div');
+    messageDiv.classList.add('a-message-message');
+    messageDiv.innerText = message;
+    outerDiv.appendChild(messageDiv);
+
+    let dateDiv = document.createElement('div');
+    dateDiv.classList.add('a-message-date');
+    dateDiv.innerText = new Date(date).toLocaleTimeString()+ ", " + new Date(date).toDateString();
+    outerDiv.appendChild(dateDiv);
+
+    return outerDiv;
+}
+
+
+
+readLocalStore();

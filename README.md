@@ -62,3 +62,8 @@ install pyjwt as well
 ```
     pip install pyjwt
 ```
+
+## channels authentication
+we have already used AuthMiddlewareStack in `asgi.py`, which supports standard Django authentication, where the user details are stored in the session. 
+
+for our jwt token, let's now use our own middleware

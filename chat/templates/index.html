@@ -8,21 +8,16 @@
     <title>Pub Chat</title>
 </head>
 <body>
-    <h1>Pub Chat</h1>
-
-
     <div id="InfoBox">
         <span id="InfoMessage">
 
         </span>
     </div>
-    <br>
 
     <div id="myInfo">
         <h3>About me</h3>
         User Name: <span id="myUserName"></span> <br/>
         Name: <span id="myName"></span> <br/>
-        <br/>
         <button onclick="logout()">logout</button>
 
     </div>
@@ -42,6 +37,35 @@
             password: <input type="password" id="register_password"> <br>
             <button onclick="register()">register</button>
         </div>
+    </div>
+
+
+    <div id="chatBox">
+        <div class="a-wrapper">
+
+            <div id="messageHolder" class="a-holder">
+                <!-- <div class="a-message">
+                    <div class="a-message-name">
+                        <span>▣</span>
+                        <span> Name</span>
+                    </div>
+                    <div class="a-message-message">
+                        Message Message Message Message Message Message Message Message Message Message Message
+                        Message Message Message Message Message Message Message Message Message Message Message
+                        Message Message Message Message
+                    </div>
+                    <div class="a-message-date">
+                        Date
+                    </div>
+                </div> -->
+            </div>
+            <br>
+            <div id="messageInput" class="input-wrapper">
+                <input id="messageText" type="text">
+                <button onclick="sendMessage()">Send Message</button>
+            </div>
+        </div>
+
     </div>
 
     <script src="/static/script.js"></script>

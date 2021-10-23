@@ -112,9 +112,9 @@ class AuthConsumer(WebsocketConsumer):
 
             # for test
             tokenData = jwt.decode(token, "secret", algorithms=["HS256"])
-            print(tokenData)
+            # print(tokenData)
             user_id = tokenData['id']
-            print(user_id)
+            # print(user_id)
 
 
                           
