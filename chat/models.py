@@ -9,9 +9,10 @@ class User(models.Model):
     password = models.CharField(max_length=30)
 
     def __str__(self): 
-        return '{\n\tuser_name: %s\
+        return '{\n\tid: %s\
+        \n\tuser_name: %s\
         \n\tname: %s\
-        \n\tpassword: %s\n}' % (self.user_name, self.name, self.password)
+        \n\tpassword: %s\n}' % (self.id, self.user_name, self.name, self.password)
 
 
 # for testing

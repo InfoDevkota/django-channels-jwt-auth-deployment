@@ -48,3 +48,17 @@ We will use different config for deployment
 
 now `$ python manage.py runserver`, you should see the contents on the template on root.
 
+## setup channels
+
+Verify you have Django Channels installed `$ python -c 'import channels; print(channels.__version__)'` 
+if not, install it 
+```
+    python -m pip install -U channels
+```
+
+Now add `'channels'` in the INSTALLED_APPS;
+
+install pyjwt as well
+```
+    pip install pyjwt
+```

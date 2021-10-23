@@ -1,3 +1,25 @@
 body {
     background-color: aliceblue;
 }
+
+/* we will set all as display none first */
+#loginRegister {
+    display: block;
+}
+
+#login {
+    display: block;
+}
+
+#register {
+    display: block;
+}
+
+#InfoMessage {
+    font-size: x-large;
+    font-weight: bolder;
+}
+
+#myInfo {
+    display: none;
+}
