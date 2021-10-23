@@ -27,7 +27,7 @@ SECRET_KEY = 'django-insecure-)#bh!a(g9q1flqtcoh7+ker=26umt#j30h28wt--gszy8ec_(_
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = []
+ALLOWED_HOSTS = ["localhost","django-chats.herokuapp.com"]
 
 
 # Application definition
@@ -87,6 +87,61 @@ DATABASES = {
 }
 
 
+
+# for postgress from heroku
+#  sample db url
+# DBURL = "postgres://uname:password@url:port/dbName"
+database_url = os.getenv('DATABASE_URL', False)
+if database_url:
+    print("Have DATABASE_URL env.")
+    # this is not way to do it but let it be it.
+    # you can use dj_database_url.config utility or 
+    # you can use django-heroku as well
+
+    # pip install psycopg2-binary as well
+
+    dbParts = database_url.split("://")
+    dbType = dbParts.pop(0)
+
+    dbParts = "://".join(dbParts)
+    dbParts = dbParts.split(":")
+    dbUser = dbParts.pop(0)
+    
+    dbParts = ":".join(dbParts)
+    dbParts = dbParts.split("@")
+    dbPassword = dbParts.pop(0)
+
+    dbParts = "@".join(dbParts)
+    dbParts = dbParts.split("/")
+    dbURL = dbParts.pop(0)
+
+    dbHost = dbURL.split(":")[0]
+    dbPort = dbURL.split(":")[1]
+
+    dbParts = "/".join(dbParts)
+    dbParts = dbParts.split("/")
+    dbName = dbParts.pop(0)
+
+    print(dbType, dbUser, dbPassword, dbHost, dbPort, dbName)
+    dbEngine = None
+
+    if dbType == 'postgres':
+        dbEngine = 'django.db.backends.postgresql'
+
+    DATABASES = {
+    'default': {
+        'ENGINE': dbEngine,
+        'NAME': dbName,
+        'USER': dbUser,
+        'PASSWORD': dbPassword,
+        'HOST': dbHost,
+        'PORT': dbPort,
+    }
+}
+
+
+
+
 # Password validation
 # https://docs.djangoproject.com/en/3.2/ref/settings/#auth-password-validators
 
@@ -123,16 +178,18 @@ USE_TZ = True
 # Static files (CSS, JavaScript, Images)
 # https://docs.djangoproject.com/en/3.2/howto/static-files/
 
+
+# for deployment serve these static from /static using nginx
+STATIC_ROOT = os.path.join(BASE_DIR, 'static')
+
+
+# collect statics from these dirs as well
+STATICFILES_DIRS = [
+    BASE_DIR / "static-files",
+]
+
 STATIC_URL = '/static/'
 
-# # for deployment serve these static from /static using nginx
-# STATIC_ROOT = os.path.join(BASE_DIR, 'static')
-
-
-# For Local Development
-STATICFILES_DIRS = [
-    BASE_DIR / "static",
-]
 
 # Default primary key field type
 # https://docs.djangoproject.com/en/3.2/ref/settings/#default-auto-field

@@ -36,7 +36,8 @@ class AuthConsumer(WebsocketConsumer):
             
             try:
                 user.save()
-            except:
+            except BaseException as e:
+                print(e)
                 # // may be because of username
                 self.send(text_data=json.dumps({
                     'type': 'message',
